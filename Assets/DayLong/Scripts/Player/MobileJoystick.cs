@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 /// A simple on-screen joystick for touch movement.
 /// Place this on the joystick background Image.
 /// </summary>
+[DisallowMultipleComponent]
 public sealed class MobileJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     [SerializeField] private RectTransform background;
@@ -75,13 +76,31 @@ public sealed class MobileJoystick : MonoBehaviour, IPointerDownHandler, IDragHa
     private void ResetJoystick()
     {
         Direction = Vector2.zero;
+
         if (handle != null)
             handle.anchoredPosition = Vector2.zero;
     }
 
-    private void OnDisable()
+    private void ResetInput()
     {
         activePointerId = int.MinValue;
         ResetJoystick();
+    }
+
+    private void OnDisable()
+    {
+        ResetInput();
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+            ResetInput();
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+            ResetInput();
     }
 }
