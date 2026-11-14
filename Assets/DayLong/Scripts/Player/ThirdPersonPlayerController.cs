@@ -4,6 +4,7 @@ using UnityEngine;
 /// Camera-relative movement for a CharacterController.
 /// Movement comes from the on-screen joystick and jump button.
 /// </summary>
+[DisallowMultipleComponent]
 [RequireComponent(typeof(CharacterController))]
 public sealed class ThirdPersonPlayerController : MonoBehaviour
 {
@@ -26,6 +27,23 @@ public sealed class ThirdPersonPlayerController : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+
+        if (movementJoystick == null)
+            Debug.LogWarning("ThirdPersonPlayerController: Assign a MobileJoystick in the Inspector.", this);
+
+        if (jumpButton == null)
+            Debug.LogWarning("ThirdPersonPlayerController: Assign a MobileJumpButton in the Inspector.", this);
+
+        if (cameraTransform == null)
+            Debug.LogWarning("ThirdPersonPlayerController: Assign the Main Camera Transform in the Inspector.", this);
+    }
+
+    private void OnValidate()
+    {
+        moveSpeed = Mathf.Max(0f, moveSpeed);
+        turnSpeed = Mathf.Max(0f, turnSpeed);
+        jumpHeight = Mathf.Max(0f, jumpHeight);
+        gravity = -Mathf.Max(0.01f, Mathf.Abs(gravity));
     }
 
     private void Update()
@@ -42,10 +60,14 @@ public sealed class ThirdPersonPlayerController : MonoBehaviour
         }
 
         bool grounded = characterController.isGrounded;
+
+        // Always consume the tap. A tap made while airborne must not trigger on landing.
+        bool jumpPressed = jumpButton != null && jumpButton.ConsumeJumpRequest();
+
         if (grounded && verticalVelocity < 0f)
             verticalVelocity = -2f;
 
-        if (grounded && jumpButton != null && jumpButton.ConsumeJumpRequest())
+        if (grounded && jumpPressed)
         {
             float gravityMagnitude = Mathf.Max(0.01f, Mathf.Abs(gravity));
             verticalVelocity = Mathf.Sqrt(jumpHeight * 2f * gravityMagnitude);
