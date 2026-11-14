@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 /// Collects drag movement from a transparent UI image.
 /// The camera reads the accumulated delta with ConsumeDelta().
 /// </summary>
+[DisallowMultipleComponent]
 public sealed class MobileLookArea : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     private Vector2 pendingDelta;
@@ -38,9 +39,26 @@ public sealed class MobileLookArea : MonoBehaviour, IPointerDownHandler, IDragHa
         return result;
     }
 
-    private void OnDisable()
+    private void ResetInput()
     {
         activePointerId = int.MinValue;
         pendingDelta = Vector2.zero;
+    }
+
+    private void OnDisable()
+    {
+        ResetInput();
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+            ResetInput();
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+            ResetInput();
     }
 }
