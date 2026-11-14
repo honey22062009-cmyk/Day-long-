@@ -48,7 +48,7 @@ The scripts in this repository are already placed under Scripts/Player, Scripts/
 12. Add a child UI Image named JoystickHandle, size about 110 x 110, and assign its RectTransform to Handle on MobileJoystick. Keep the handle's Raycast Target enabled so pointer events can bubble to the joystick parent.
 13. Under SafeArea, create JumpButton as a UI Image. Anchor it to bottom-right, set its pivot to (1,0), position to about (-150,150), and size to about 150 x 150. Add MobileJumpButton.
 14. Keep the Canvas order exactly like this: LookArea first, JoystickBackground second, JumpButton third. The joystick and jump button must be above LookArea in the hierarchy so they receive their own touches.
-15. Create an EventSystem. Remove the old Standalone Input Module if present, then add Input System UI Input Module. In its Inspector, assign the default UI actions if the action fields are empty. Confirm Point, Left Click, Move, Submit and Cancel have action references.
+15. Create an EventSystem using GameObject > UI > Event System. If its Inspector shows a Replace with InputSystemUIInputModule button, click it. Otherwise remove Standalone Input Module and add Input System UI Input Module. The module normally assigns its default UI actions automatically. Check that Point and Left Click are assigned; also check the navigation, Submit and Cancel actions if you use keyboard/controller navigation.
 16. On Player, assign JoystickBackground's MobileJoystick, JumpButton's MobileJumpButton and Main Camera's Transform.
 17. On Main Camera, assign Player as Follow Target and LookArea's MobileLookArea.
 
