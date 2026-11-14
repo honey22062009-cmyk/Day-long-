@@ -4,6 +4,7 @@ using UnityEngine;
 /// Lightweight third-person follow camera controlled by a touch drag area.
 /// This keeps Phase 1 independent from extra camera packages.
 /// </summary>
+[DisallowMultipleComponent]
 public sealed class ThirdPersonCameraController : MonoBehaviour
 {
     [Header("References")]
@@ -35,6 +36,25 @@ public sealed class ThirdPersonCameraController : MonoBehaviour
 
         if (followTarget != null)
             SnapToTarget();
+        else
+            Debug.LogWarning("ThirdPersonCameraController: Assign a Follow Target in the Inspector.", this);
+
+        if (lookArea == null)
+            Debug.LogWarning("ThirdPersonCameraController: Assign the MobileLookArea in the Inspector.", this);
+    }
+
+    private void OnValidate()
+    {
+        distance = Mathf.Max(0.1f, distance);
+        targetHeight = Mathf.Max(0f, targetHeight);
+        sensitivity = Mathf.Max(0f, sensitivity);
+        followSmoothTime = Mathf.Max(0f, followSmoothTime);
+        rotationSharpness = Mathf.Max(0f, rotationSharpness);
+
+        if (maximumPitch < minimumPitch)
+            maximumPitch = minimumPitch;
+
+        startingPitch = Mathf.Clamp(startingPitch, minimumPitch, maximumPitch);
     }
 
     private void LateUpdate()
