@@ -1,49 +1,53 @@
 # Day Long Addict
 
-A single-player 3D open-world survival game for Android phones and tablets, built with Unity.
+**Day Long Addict** is a single-player, Android-first 3D wilderness survival game built with Godot 4.7.1.
 
-## Project status
+The repository has been restarted as a clean Godot project. The earlier Unity-only skeleton is replaced on the current branch.
 
-**Early prototype foundation.** The repository contains Phase 1 touch-control and third-person controller scripts, setup documentation, and an art-direction guide. A Unity project, playable scene, imported art assets and Android APK have not yet been built or tested.
+## First playable prototype
 
-## Visual direction
+- Third-person 3D player with keyboard and mobile touch movement.
+- Drag-to-look camera and touch jump button.
+- Generated forest clearing, rocks, river strip, and collectible resources.
+- Collect wood, stone, and berries.
+- Eat berries to restore hunger and a little thirst.
+- Build a shelter after collecting 3 wood and 2 stone.
+- Day/night lighting cycle and local JSON save.
 
-Grounded, stylized semi-realistic wilderness survival. The UI, player, tools and environments should share a restrained forest-and-earth palette, readable silhouettes and mobile-friendly detail levels.
+This is the first playable foundation, not the finished open-world game. Art currently uses generated low-poly primitives. Richer terrain, crafting, wildlife, weather, sound, animation, and expanded survival systems are later phases.
 
-See [Art Direction and UI Visual Standard](Docs/ART_DIRECTION_AND_UI.md) for the HUD layout, design tokens, character/tool direction, animation checklist and Android graphics limits.
+## Android APK
 
-## Planned technology
+Every push to main starts the **Build Android APK** GitHub Actions workflow. A manual run is also available under the repository's Actions tab.
 
-- Unity 6 LTS
-- C#
-- Universal Render Pipeline (URP)
-- New Input System
-- TextMeshPro
-- Android phones and tablets
+After a successful run:
+1. Open the latest successful Build Android APK run.
+2. Open Artifacts.
+3. Download the Day-Long-Addict-Android-APK ZIP.
+4. Extract the ZIP and install the APK on an Android device.
 
-## Development phases
+The workflow creates a temporary debug-signed APK for testing. It is not a Play Store release build. No private signing key is stored in this repository.
 
-1. Project setup, touch controls, third-person character and camera
-2. Procedural chunk-streamed terrain and biomes
-3. Inventory
-4. Gathering and mining
-5. Crafting and equipment upgrades
-6. Building
-7. Timed task system
-8. Wildlife AI
-9. Day/night cycle, weather and graphics polish
-10. Saving, menus, optimization and Android build
+## Controls
 
-## Getting started
+| Action | Touch | Desktop test |
+|---|---|---|
+| Move | Left virtual joystick | WASD |
+| Look around | Drag on right side | Hold right mouse button and move |
+| Jump | JUMP button | Not mapped |
+| Collect supply | GATHER button | GATHER button |
+| Build shelter | BUILD button | BUILD button |
+| Eat berries | EAT button | EAT button |
 
-Create the Unity project in Unity Hub using the Universal 3D (URP) template. Place the project files in this repository and keep the selected Unity version consistent. Follow [Phase 1 Setup](Docs/PHASE_01_SETUP.md).
+## Project layout
 
-Do not commit generated folders such as Library/, Temp/, Obj/ or build output. See the .gitignore file.
+- project.godot - Godot project settings.
+- scenes/main.tscn - Main game scene.
+- scripts/main.gd - World, player, survival loop, UI, and save logic.
+- scripts/touch_stick.gd - Mobile virtual joystick.
+- export_presets.cfg - Android export preset.
+- .github/workflows/android-apk.yml - Cloud APK build.
 
-## Android target
+## Verification status
 
-One responsive Android build should support phone and tablet landscape layouts. Aim for 60 FPS on capable devices, with a stable 30 FPS fallback on less capable hardware. Measure performance on real target devices before increasing visual quality.
-
-## Build status
-
-No APK is currently available. A real Unity Android build and device test are required before a release can be published.
+The project and workflow are committed first. The Actions run must complete before an APK can be described as built. A successful export still needs an install-and-play check on a physical Android device.
