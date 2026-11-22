@@ -1,7 +1,8 @@
 extends CharacterBody3D
 
-@export var move_speed := 3.2
-@export var mouse_sensitivity := 0.0022
+@export var move_speed := 3.25
+@export var mouse_sensitivity := 0.0028
+
 var camera: Camera3D
 var touch_actions: Dictionary = {}
 var look_touch_id := -1
@@ -13,13 +14,27 @@ func _ready() -> void:
 	capsule.radius = 0.32
 	capsule.height = 1.65
 	collider.shape = capsule
-	collider.position.y = 0.82
+	collider.position.y = 0.83
 	add_child(collider)
+
 	camera = Camera3D.new()
-	camera.position = Vector3(0, 1.48, 0)
+	camera.position = Vector3(0, 1.5, 0)
 	camera.current = true
+	camera.fov = 78.0
 	add_child(camera)
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+	var flashlight := SpotLight3D.new()
+	flashlight.name = "OfficerFlashlight"
+	flashlight.position = Vector3(0, -0.05, -0.08)
+	flashlight.light_color = Color("#d7e2f2")
+	flashlight.light_energy = 2.3
+	flashlight.spot_range = 15.0
+	flashlight.spot_angle = 38.0
+	flashlight.shadow_enabled = true
+	camera.add_child(flashlight)
+
+	if not OS.has_feature("mobile"):
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _physics_process(delta: float) -> void:
 	var input_vector := Vector2.ZERO
@@ -31,10 +46,14 @@ func _physics_process(delta: float) -> void:
 		input_vector.x -= 1.0
 	if Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT) or touch_actions.get("right", false):
 		input_vector.x += 1.0
+
 	input_vector = input_vector.normalized()
-	var direction := (global_transform.basis * Vector3(input_vector.x, 0, input_vector.y)).normalized()
+	var direction := global_transform.basis * Vector3(input_vector.x, 0.0, input_vector.y)
+	direction.y = 0.0
+	direction = direction.normalized()
 	velocity.x = direction.x * move_speed
 	velocity.z = direction.z * move_speed
+
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	else:
@@ -53,10 +72,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif not event.pressed and event.index == look_touch_id:
 			look_touch_id = -1
 	elif event is InputEventScreenDrag and event.index == look_touch_id:
-		_rotate_view(event.relative * 1.0)
+		_rotate_view(event.relative)
 	elif event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _rotate_view(relative: Vector2) -> void:
 	rotate_y(-relative.x * mouse_sensitivity)
-	camera.rotation.x = clampf(camera.rotation.x - relative.y * mouse_sensitivity, deg_to_rad(-75), deg_to_rad(75))
+	camera.rotation.x = clampf(
+		camera.rotation.x - relative.y * mouse_sensitivity,
+		deg_to_rad(-75.0),
+		deg_to_rad(75.0)
+	)
