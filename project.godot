@@ -1,7 +1,7 @@
 config_version=5
 
 [application]
-config/name="Day Long"
+config/name="THE LAST CALL"
 run/main_scene="res://scenes/main.tscn"
 
 [display]
@@ -13,3 +13,6 @@ window/stretch/mode="canvas_items"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/default_filters/use_nearest_mipmap_filter=false
+
+[physics]
+3d/default_gravity=9.8
