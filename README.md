@@ -1,33 +1,38 @@
 # THE LAST CALL
 
-A Godot 4 first-person haunted-house prototype designed with Android tablets in mind.
+A Godot 4 first-person haunted-house investigation prototype for Android tablets.
 
 ## Story
 
-You are a police officer responding to a late-night check at an isolated house. The radio signal dies, the exit is locked, and you must explore the house, find the key, and get out while a ghostly presence appears.
+You are a police officer sent to investigate a late-night emergency call from 14 Blackwood Lane. The radio falls silent and the front door locks behind you.
 
-## Current prototype
+The house belonged to Mira Sen, a music teacher who raised her younger brother Arin after their parents died. During a violent storm, faulty wiring started a fire. Mira got Arin outside, then went back to shut off the main power and retrieve the front-door key. The old door jammed, and she never escaped.
 
-- First-person 3D movement
-- Keyboard movement for desktop testing
-- On-screen movement buttons and touch-drag camera look for tablets
-- A small haunted-house layout built from primitive 3D geometry
-- A glowing key pickup
-- A locked exit that opens after the key is found
-- A brief, non-graphic ghost apparition event
-- Basic objective and story messages
+The apparition is frightening, but the memories reveal that Mira is trying to make someone understand what happened and finish the journey she could not.
 
-## Import
+## Investigation tasks
 
-1. Download the repository ZIP from GitHub and extract it.
-2. In Godot 4, choose **Import** and select the extracted folder's `project.godot`.
-3. Open the project and press **Run Project**.
+1. Find the spare fuse in the utility area.
+2. Restore power at the fuse box on the east wall.
+3. Recover three memories: Mira's diary page, a family photograph, and her final recording.
+4. Follow the music-box clue to reveal the brass front-door key.
+5. Unlock the exit and leave the house.
 
 ## Controls
 
-- Desktop: W/A/S/D or arrow keys to move; mouse to look.
-- Tablet: use the directional buttons at the lower-left; drag on the right side to look.
+- Desktop: W/A/S/D or arrow keys to move, mouse to look, E to interact.
+- Android tablet: directional buttons at the lower-left, drag on the right side to look, and tap INTERACT when it appears.
 
-## Development notes
+## Current prototype features
 
-This is an early prototype. It has not yet been run or performance-tested on a physical Android device. Lighting, collision, touch controls, and scene behavior should be tested in Godot before adding more content.
+- First-person 3D controller and flashlight.
+- Haunted-house blockout with furniture, fog, low lighting, and flickering lamps.
+- Task-driven fuse and memory investigation.
+- Story clues that reveal Mira's past and the cause of her death.
+- Brief ghost apparition / screen-flash scare.
+- Key reveal and exit objective.
+- On-screen mobile controls.
+
+## Important development status
+
+This is a playable-intent prototype built from Godot primitive meshes and scripted lighting. It has **not** been run through the Godot engine or tested on a physical Android device in this workflow. The current art is a blockout, not final high-detail production art. The next pass should add original house/ghost models, textures, animations, spatial audio, and then test touch controls, collisions, lighting, and performance in Godot 4.
