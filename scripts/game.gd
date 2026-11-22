@@ -105,6 +105,9 @@ func _build_house() -> void:
 	_add_table("Writing desk", Vector3(-6.0, 0.0, -4.8), Vector3(1.9, 0.85, 1.0), Color("#382e2b"))
 	_add_box("Display cabinet", Vector3(7.4, 1.05, -4.8), Vector3(1.0, 2.1, 1.0), Color("#30282a"))
 	_add_table("Music table", Vector3(0.0, 0.0, -5.7), Vector3(1.5, 0.75, 1.0), Color("#46352d"))
+	_add_box("Music box base", Vector3(0.52, 0.94, -5.7), Vector3(0.58, 0.22, 0.48), Color("#6a4a2d"), false)
+	_add_box("Music box lid", Vector3(0.52, 1.08, -5.7), Vector3(0.58, 0.08, 0.48), Color("#927046"), false)
+	_add_box("Music box brass inlay", Vector3(0.52, 1.125, -5.7), Vector3(0.28, 0.015, 0.16), Color("#d1b36d"), false)
 	_add_box("Old sofa", Vector3(-4.6, 0.55, 0.8), Vector3(2.8, 1.1, 1.1), Color("#39343a"))
 	_add_box("Side cabinet", Vector3(4.7, 0.65, 2.8), Vector3(1.0, 1.3, 0.9), Color("#39302d"))
 	_add_box("Broken beam", Vector3(3.2, 2.9, -1.3), Vector3(5.8, 0.18, 0.2), Color("#25252a"), false)
@@ -307,6 +310,12 @@ func _add_interactable(id: String, prompt: String, position_value: Vector3, kind
 			mesh_material.metallic = 0.85
 			mesh_material.emission_enabled = true
 			mesh_material.emission = Color("#8c6020")
+		"exit":
+			var exit_mesh := BoxMesh.new()
+			exit_mesh.size = Vector3(0.12, 0.42, 0.08)
+			item.mesh = exit_mesh
+			mesh_material.albedo_color = Color("#b99a62")
+			mesh_material.metallic = 0.7
 	item.material_override = mesh_material
 	root.add_child(item)
 
@@ -370,7 +379,7 @@ func _try_interact() -> void:
 			exit_unlocked = true
 			if is_instance_valid(exit_door):
 				exit_door.queue_free()
-			_add_interactable("exit", "LEAVE THE HOUSE", Vector3(0.0, 1.0, -8.1), "breaker")
+			_add_interactable("exit", "LEAVE THE HOUSE", Vector3(0.82, 1.0, -8.1), "exit")
 			_show_message("The key turns. The front door creaks open.", 4.0)
 		"exit":
 			if key_found:
@@ -401,7 +410,7 @@ func _reveal_key() -> void:
 	if key_revealed:
 		return
 	key_revealed = true
-	_add_interactable("key", "TAKE THE FRONT DOOR KEY", Vector3(0.0, 1.0, -6.65), "key")
+	_add_interactable("key", "TAKE THE FRONT DOOR KEY", Vector3(0.52, 1.18, -5.7), "key")
 	_show_message("The music box clicks open. A brass key is inside.", 5.0)
 	_trigger_ghost_scare()
 
@@ -493,6 +502,16 @@ func _make_ghost() -> Node3D:
 	hair_back.position = Vector3(0, 1.75, 0.28)
 	hair_back.material_override = _ghost_material(Color(0.025, 0.03, 0.045, 0.95))
 	ghost.add_child(hair_back)
+
+	for side in [-1.0, 1.0]:
+		var eye := MeshInstance3D.new()
+		var eye_mesh := SphereMesh.new()
+		eye_mesh.radius = 0.045
+		eye_mesh.height = 0.09
+		eye.mesh = eye_mesh
+		eye.position = Vector3(side * 0.11, 2.09, -0.285)
+		eye.material_override = _ghost_material(Color(0.012, 0.015, 0.022, 1.0))
+		ghost.add_child(eye)
 
 	for side in [-1.0, 1.0]:
 		var arm := MeshInstance3D.new()
