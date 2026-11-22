@@ -1,0 +1,62 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-apk:
+    name: Export THE LAST CALL for Android
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.5.2
+    steps:
+      - name: Check out game source
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Prepare Godot Android export environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.local/share/godot/export_templates" "$HOME/.config"
+          if [ "$HOME" != "/root" ]; then
+            cp -a /root/.local/share/godot/export_templates/4.5.2.stable "$HOME/.local/share/godot/export_templates/"
+            cp -a /root/.config/godot "$HOME/.config/"
+          fi
+          godot --version
+          java -version
+          test -d "${ANDROID_HOME:-/usr/lib/android-sdk}"
+
+      - name: Import project and check scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --editor --quit
+
+      - name: Export installable debug APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/android
+          godot --headless --path . --export-debug "Android Debug" "$GITHUB_WORKSPACE/build/android/THE-LAST-CALL.apk"
+          test -s build/android/THE-LAST-CALL.apk
+          unzip -t build/android/THE-LAST-CALL.apk
+          if command -v apksigner >/dev/null 2>&1; then
+            apksigner verify --verbose build/android/THE-LAST-CALL.apk
+          elif [ -x "${ANDROID_HOME:-/usr/lib/android-sdk}/build-tools/33.0.2/apksigner" ]; then
+            "${ANDROID_HOME:-/usr/lib/android-sdk}/build-tools/33.0.2/apksigner" verify --verbose build/android/THE-LAST-CALL.apk
+          fi
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: THE-LAST-CALL-Android-APK
+          path: build/android/THE-LAST-CALL.apk
+          if-no-files-found: error
+          retention-days: 30
