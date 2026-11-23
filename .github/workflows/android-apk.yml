@@ -44,6 +44,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/android
+          echo "Export presets in checked-out revision:"
+          grep -n "^\[preset\." export_presets.cfg
+          grep -q "^\[preset\.0\]$" export_presets.cfg
           godot --headless --path . --export-debug "Android Debug" "$GITHUB_WORKSPACE/build/android/THE-LAST-CALL.apk"
           test -s build/android/THE-LAST-CALL.apk
           unzip -t build/android/THE-LAST-CALL.apk
